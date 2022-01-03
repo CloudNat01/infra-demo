@@ -1,9 +1,9 @@
-name: "terrafrom-apply"
+name: "terrafrom-infra"
 
 on:
   push: 
     branches:
-       - master
+       - futurebranch1
 
 
 jobs:
@@ -16,10 +16,10 @@ jobs:
        AWS_REGION: "us-west-2"
 
      steps:
-        - name: checkout
-          uses: action/checkout@v2
+        - name:  checkout
+          uses:  action/checkout@v2
 
-        - name: Setup Terraform
+        - name:  Setup Terraform
           uses: hasicorp/setup-terraform@v1
 
         - name: Terraform init
@@ -30,12 +30,3 @@ jobs:
           id: plan
           if: github.event_name == 'push'
           run: terraform plan -no-color
-          continue-on-error: true
-
-        - name: Terraform plan status 
-          if: steps.plan.outcome == 'failure'
-          run: exit 1
-
-        - name: Terraform apply
-          if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-          run: terraform apply -auto-approve
